@@ -17,7 +17,7 @@ public class DijkstraAlgorithm {
         start.addNeighbour(b, 2);
 
         a.addNeighbour(end, 1);
-        
+
         b.addNeighbour(a, 3);
         b.addNeighbour(end, 5);
 
@@ -25,6 +25,12 @@ public class DijkstraAlgorithm {
         System.out.println("Соседи для A: " + a.getNeighbours());
         System.out.println("Соседи для B: " + b.getNeighbours());
         System.out.println("Соседи для end: " + end.getNeighbours());
+
+        Map<Node, Integer> costs = new HashMap<>();
+        costs.put(a, 6);
+        costs.put(b, 2);
+        costs.put(end, Integer.MAX_VALUE);
+
 
     }
 }
