@@ -16,20 +16,22 @@ public class DijkstraAlgorithm {
         start.addNeighbour(a, 6);
         start.addNeighbour(b, 2);
 
-        a.addNeighbour(start, 6);
-        a.addNeighbour(b, 3);
         a.addNeighbour(end, 1);
-
-        b.addNeighbour(start, 2);
+        
         b.addNeighbour(a, 3);
         b.addNeighbour(end, 5);
+
+        System.out.println("Соседи для start: " + start.getNeighbours());
+        System.out.println("Соседи для A: " + a.getNeighbours());
+        System.out.println("Соседи для B: " + b.getNeighbours());
+        System.out.println("Соседи для end: " + end.getNeighbours());
 
     }
 }
 
 class Node{
     String title;
-    Map<Node, Integer> neighbours = new HashMap<>();
+   private Map<Node, Integer> neighbours = new HashMap<>();
 
     public Node(String title){
         this.title = title;
@@ -41,6 +43,10 @@ class Node{
 
     public void addNeighbour(Node node, Integer cost){
         neighbours.put(node, cost);
+    }
+
+    public Map<Node, Integer> getNeighbours(){
+        return neighbours;
     }
 
     @Override
