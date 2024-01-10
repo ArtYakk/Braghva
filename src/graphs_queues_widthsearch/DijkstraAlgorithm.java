@@ -4,77 +4,68 @@ import java.util.*;
 
 public class DijkstraAlgorithm {
     public static void main(String[] args) {
-        Map<String, Node> graph = new HashMap<>(); // Создаём граф *
+        Map<String, Map<String, Integer>> graph = new HashMap<>(); // Nodes with neighbours are here
 
-        Node start = new Node("start"); // Создаём узлы
-        Node a = new Node("a");
-        Node b = new Node("b");
-        Node end = new Node("end");
+        Map<String, Integer> start = new HashMap<>();
+        Map<String, Integer> a = new HashMap<>();
+        Map<String, Integer> b = new HashMap<>();
+        Map<String, Integer> fin = new HashMap<>();
 
-        start.addNeighbour(a, 6); // Добавляем соседей каждому узлу
-        start.addNeighbour(b, 2);
-        a.addNeighbour(end, 1);
-        b.addNeighbour(a, 3);
-        b.addNeighbour(end, 5);
+        start.put("a", 6);
+        start.put("b", 2);
 
-        graph.put("start", start); // Добавляем узлы в граф
+        a.put("fin", 1);
+
+        b.put("a", 3);
+        b.put("fin", 5);
+
+        graph.put("start", start);
         graph.put("a", a);
         graph.put("b", b);
-        graph.put("end", end);
+        graph.put("fin", fin);
 
-        Map<Node, Integer> costs = new HashMap<>(); // Хеш-таблица стоимости узлов *
-        costs.put(a, 6);
-        costs.put(b, 2);
-        costs.put(end, Integer.MAX_VALUE);
+        Map<String, Integer> costs = new HashMap<>();
+        costs.put("a", 6);
+        costs.put("b", 2);
+        costs.put("fin", Integer.MAX_VALUE);
 
-        Map<Node, Node> parents = new HashMap<>(); // Хеш-таблица родителей узлов *
-        parents.put(a, start);
-        parents.put(b, start);
-        parents.put(end, null);
+        Map<String, String> parents = new HashMap<>();
+        parents.put("a", "start");
+        parents.put("b", "start");
+        parents.put("fin", null);
 
+        Set<String> processed = new HashSet<>();
 
+        String node = findLowestCost(costs, processed);
+        while (node != null){
+            Integer cost = costs.get(node);
+            Map<String, Integer> neighbours = graph.get(node);
+            for (String n : neighbours.keySet()) {
+                Integer newCost = cost + neighbours.get(n);
+                if(costs.get(n) > newCost){
+                    costs.put(n, newCost);
+                    parents.put(n, node);
+                }
+            }
+            processed.add(node);
+            node = findLowestCost(costs, processed);
+        }
 
-
-    }
-}
-
-class Node{
-    String title;
-   private Map<Node, Integer> neighbours = new HashMap<>(); // Хеш-таблица соседей <Узел, расстояние до него> **
-
-    public Node(String title){
-        this.title = title;
-    }
-
-    public String getTitle(){
-        return title;
-    }
-
-    public void addNeighbour(Node node, Integer cost){
-        neighbours.put(node, cost);
+        System.out.println(costs + "\n" + parents);
     }
 
+    public static String findLowestCost(Map<String, Integer> costs, Set<String> processed){
+       Map.Entry<String, Integer> lowest =
+                 costs
+                .entrySet()
+                .stream()
+                .filter(e -> !processed.contains(e.getKey()))
+                .min(Comparator.comparingInt(Map.Entry::getValue))
+                .orElse(null);
 
-    public Map<Node, Integer> getNeighbours(){
-        return neighbours;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Node node = (Node) o;
-        return Objects.equals(title, node.title);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(title);
-    }
-
-    @Override
-    public String toString() {
-        return  title;
+        if(lowest != null){
+            return lowest.getKey();
+        } else return null;
     }
 
 }
