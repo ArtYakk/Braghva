@@ -48,6 +48,7 @@ public class DijkstraAlgorithm {
                 }
             }
             processed.add(node);
+            System.out.println(node);
             node = findLowestCost(costs, processed);
         }
 
